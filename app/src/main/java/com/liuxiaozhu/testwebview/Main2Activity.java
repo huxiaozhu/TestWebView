@@ -35,52 +35,49 @@ public class Main2Activity extends AppCompatActivity {
         //声明WebSettings子类
         mWebSettings = mWebView.getSettings();
 
-//如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
+        //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
         mWebSettings.setJavaScriptEnabled(true);
-// 若加载的 html 里有JS 在执行动画等操作，会造成资源浪费（CPU、电量）
-// 在 onStop 和 onResume 里分别把 setJavaScriptEnabled() 给设置成 false 和 true 即可
+        // 若加载的 html 里有JS 在执行动画等操作，会造成资源浪费（CPU、电量）
+        // 在 onStop 和 onResume 里分别把 setJavaScriptEnabled() 给设置成 false 和 true 即可
 
         //支持插件
 //        mWebSettings.setPluginsEnabled(true);
 
-//设置自适应屏幕，两者合用
+        //设置自适应屏幕，两者合用
         mWebSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
         mWebSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
 
-//缩放操作
+        //缩放操作
         mWebSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
         mWebSettings.setBuiltInZoomControls(true); //设置内置的缩放控件。若为false，则该WebView不可缩放
         mWebSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
 
-//其他细节操作
-
+        //其他细节操作
         mWebSettings.setAllowFileAccess(true); //设置可以访问文件
         mWebSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
         mWebSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
         mWebSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
 
-        mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //开启webview中缓存
-        //缓存模式如下：
-        //LOAD_CACHE_ONLY: 不使用网络，只读取本地缓存数据
-        //LOAD_DEFAULT: （默认）根据cache-control决定是否从网络上取数据。
-        //LOAD_NO_CACHE: 不使用缓存，只从网络获取数据.
-        //LOAD_CACHE_ELSE_NETWORK，只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。
-
         /**
-         * 离线加载
+         * 离线加载,缓存问题待解决
          */
 //        if (NetStatusUtil.isConnected(getApplicationContext())) {
-//            webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);//根据cache-control决定是否从网络上取数据。
+//            mWebSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+//            //缓存模式如下：
+////        LOAD_CACHE_ONLY: 不使用网络，只读取本地缓存数据
+////        LOAD_DEFAULT: （默认）根据cache-control决定是否从网络上取数据。
+////        LOAD_NO_CACHE: 不使用缓存，只从网络获取数据.
+////        LOAD_CACHE_ELSE_NETWORK，只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。
 //        } else {
-//            webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//没网，则从本地获取，即离线加载
+//            mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 //        }
 //
-//        webSettings.setDomStorageEnabled(true); // 开启 DOM storage API 功能
-//        webSettings.setDatabaseEnabled(true);   //开启 database storage API 功能
-//        webSettings.setAppCacheEnabled(true);//开启 Application Caches 功能
+//        mWebSettings.setDomStorageEnabled(true); // 开启 DOM storage API 功能
+//        mWebSettings.setDatabaseEnabled(true);   //开启 database storage API 功能
+//        mWebSettings.setAppCacheEnabled(true);//开启 Application Caches 功能
 //
-//        String cacheDirPath = getFilesDir().getAbsolutePath() + APP_CACAHE_DIRNAME;
-//        webSettings.setAppCachePath(cacheDirPath); //设置  Application Caches 缓存目录
+//        String cacheDirPath = getFilesDir().getAbsolutePath() + "/html";
+//        mWebSettings.setAppCachePath(cacheDirPath); //设置  Application Caches 缓存目录
     }
 
     @Override
@@ -126,17 +123,18 @@ public class Main2Activity extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            Toast.makeText(Main2Activity.this,"加载中",Toast.LENGTH_SHORT).show();
+            Toast.makeText(Main2Activity.this, "加载中", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            Toast.makeText(Main2Activity.this,"加载完成",Toast.LENGTH_SHORT).show();
+            Toast.makeText(Main2Activity.this, "加载完成", Toast.LENGTH_SHORT).show();
         }
 
         /**
          * 在加载页面资源时会调用，每一个资源（比如图片）的加载都会调用一次。
+         *
          * @param view
          * @param url
          */
@@ -147,6 +145,7 @@ public class Main2Activity extends AppCompatActivity {
 
         /**
          * 加载出错
+         *
          * @param view
          * @param request
          * @param error
@@ -154,12 +153,13 @@ public class Main2Activity extends AppCompatActivity {
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
-            Toast.makeText(Main2Activity.this,"加载错误",Toast.LENGTH_SHORT).show();
+            Toast.makeText(Main2Activity.this, "加载错误", Toast.LENGTH_SHORT).show();
         }
 
         /**
          * 处理http请求
          * webView默认是不处理https请求的，页面显示空白，需要进行如下设置
+         *
          * @param view
          * @param handler
          * @param error
@@ -182,6 +182,6 @@ public class Main2Activity extends AppCompatActivity {
      * 处理js交互
      */
     class MyWebChromeClient extends WebChromeClient {
-        
+
     }
 }
